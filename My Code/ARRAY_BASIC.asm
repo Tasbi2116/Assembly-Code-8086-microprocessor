@@ -1,0 +1,49 @@
+INCLUDE 'EMU8086.INC'
+.MODEL SMALL
+.STACK 100H
+.DATA
+    NUMBER DB 10 DUB (?)
+    MSG1 DB "ENTER 10 NUMBERS FOR THE ARRAY: $"
+    MSG2 DB "OUTPUT: $"
+.CODE
+MAIN PROC
+    MOV AX,@DATA
+    MOV DS,AX
+    
+    XOR BX,BX
+    XOR CX,CX
+    MOV CX,10
+    
+    ;PRINT MSG1
+    MOV AH,9
+    LEA DX,MSG1
+    INT 21H
+    
+    MOV AH,1
+    FOR:
+        INT 21H
+        MOV NUMBER[BX], AL
+        INC BX
+    LOOP FOR
+    
+    XOR BX,BX
+    XOR CX,CX
+    MOV CX,10
+    
+    PRINTN ; NEW LINE
+    
+    ;PRINT MSG2
+    MOV AH,9
+    LEA DX,MSG2
+    INT 21H
+    MOV AH,2
+    PRINT: ; PRINT ARRAY
+         MOV DL, NUMBER[BX]
+         INT 21H
+         INC BX
+    LOOP PRINT
+    
+    MOV AH,4CH
+    INT 21H
+    MAIN ENDP
+END MAIN

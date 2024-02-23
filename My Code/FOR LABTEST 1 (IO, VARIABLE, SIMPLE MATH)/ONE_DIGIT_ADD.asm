@@ -1,0 +1,64 @@
+.MODEL SMALL
+.STACK 100H
+.DATA
+    A DB 'INPUT FIRST DIGIT $'
+    B DB 'INPUT SECONF DIGIT $'
+    C DB 'RESULT $'
+
+.CODE
+MAIN PROC
+    MOV AX,@DATA
+    MOV DS, AX
+    
+    ;OUTPUT STRING A
+    MOV AH,9
+    LEA DX,A
+    INT 21H
+    
+    ;INPUT FIRST DIGIT
+    MOV AH,1
+    INT 21H
+    MOV BL,AL
+    
+    ;NEW LINE
+    MOV AH,2
+    MOV DL,10
+    INT 21H
+    MOV DL,13
+    INT 21H
+    
+    ;OUTPUT STRING B
+    MOV AH,9
+    LEA DX,B
+    INT 21H
+    
+    ;INPUT SECOND DIGIT
+    MOV AH,1
+    INT 21H
+    MOV BH,AL
+    
+    ;NEW LINE
+    MOV AH,2
+    MOV DL,10
+    INT 21H
+    MOV DL,13
+    INT 21H
+    
+    MOV AH,9
+    LEA DX,C
+    INT 21H
+    
+    ;ADD TWO DIGIT
+    ADD BL,BH ; BL=BL+BH
+    SUB BL,48 ; SUB ASCII VALUE FROM THE RESULT
+    
+    ; OUTPUT RESULT
+    MOV AH,2
+    MOV DL,BL
+    INT 21H
+    
+    EXIT:
+    MOV AH,4CH
+    INT 21H
+    MAIN ENDP
+END MAIN

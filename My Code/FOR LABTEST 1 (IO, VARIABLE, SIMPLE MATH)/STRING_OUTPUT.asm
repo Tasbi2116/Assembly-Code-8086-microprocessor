@@ -1,0 +1,24 @@
+.MODEL
+.STACK 100H
+.DATA
+    MSG DB "I LOVE SANIMUN"
+
+.CODE
+
+MAIN PROC
+    
+    MOV AX, @DATA   ; DATA SEGMENT INITIALIZE CODE
+    MOV DS,AX  
+
+    ; PRINT MSG 
+    MOV AH,9
+    LEA DX,MSG
+    INT 21H
+
+    
+    
+    EXIT:
+    MOV AH, 4CH
+    INT 21H
+    MAIN ENDP
+END MAIN

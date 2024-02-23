@@ -1,0 +1,31 @@
+.MODEL
+.STACK 100H
+.DATA
+    MSG DB 3
+    MSG1 DB ?
+
+.CODE
+
+MAIN PROC
+    
+    MOV AX, @DATA   ; DATA SEGMENT INITIALIZE CODE
+    MOV DS,AX  
+
+    ; PRINT MSG 3
+    MOV AH,2
+    ADD MSG, 48
+    MOV DL,MSG
+    INT 21H
+    
+    ;INPUT FORM USER FOR MSG1
+    
+    MOV AX,1
+    INT 21H
+    MOV MSG1, AL  
+    
+    
+    EXIT:
+    MOV AH, 4CH
+    INT 21H
+    MAIN ENDP
+END MAIN

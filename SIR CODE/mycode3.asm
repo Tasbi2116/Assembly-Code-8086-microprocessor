@@ -1,0 +1,84 @@
+.MODEL SMALL
+.STACK 100H
+.DATA
+    MSG1 DB "ENTER NUMBER NO1: $"
+    MSG2 DB "ENTER NUMBER NO2: $"
+    MSG3 DB "SUM IS: $"
+    NO1 DB 0
+    NO2 DB 0
+    SUM DB 0
+    REM DB 0
+    
+.CODE
+MAIN PROC
+    MOV AX,@DATA
+    MOV DS,AX ; INITIALIZING DATA SEGMENT
+    
+    ;PRINT MSG1
+    MOV AH,9
+    LEA DX,MSG1
+    INT 21H
+    
+    ;INPUT NO1
+    MOV AH,1
+    INT 21H
+    SUB AL,48
+    MOV NO1,AL
+    
+    ;PRINT NEW LINE
+    MOV AH,2
+    MOV DL,10
+    INT 21H
+    MOV DL,13
+    INT 21H
+    
+    ;PRINT MSG 2
+    MOV AH,9
+    LEA DX,MSG2
+    INT 21H
+    
+    ;INPUT NO2
+    MOV AH,1
+    INT 21H
+    SUB AL,48
+    MOV NO2,AL
+    
+    ;PRINT NEW LINE
+    MOV AH,2
+    MOV DL,10
+    INT 21H
+    MOV DL,13
+    INT 21H
+    
+    ;ADD TWO NUMBERS
+    MOV DL,NO1
+    ADD DL,NO2
+    MOV SUM,DL
+    
+    ;CLEAR AH TO USE FOR REMINDER
+    MOV AH,0
+    MOV AL,SUM ;MOVING SUM TO AL
+    MOV BL,10
+    DIV BL ; THIS REPRESENT AL/BL
+    
+    ;MOVE REMINDER TO REM
+    MOV REM,AH
+    
+    ;PRINT AL
+    MOV DL,AL
+    ADD DL,48
+    MOV AH,2
+    INT 21H
+    
+    ;PRINT THE REMINDER
+    MOV DL,REM
+    ADD DL,48
+    MOV AH,2
+    INT 21H
+     
+    
+    EXIT:
+    MOV AX,4C00H
+    INT 21H
+    MAIN ENDP
+END MAIN

@@ -1,0 +1,80 @@
+.MODEL SMALL
+.STACK 100H
+.DATA
+    MYRES DB ?
+    REM DB 0
+    
+.CODE
+MAIN PROC
+    
+    MOV AX, @DATA
+    MOV DS,AX
+    
+    MOV DL, 10
+    MOV BL,0
+    
+  SCAN_NUM:
+    
+    MOV AH,01H
+    INT 21H
+    
+    CMP AL, 13 ;CHECK IF USER PRESSED ENTER KEY
+    JE EXIT    ;IF EQUAL TO ENTER KEY THEN JUMP TO EXIT LABLE
+    
+    MOV AH,0
+    SUB AL,48  ; SUBSTRACTING 48 WITH THE FIRST INPUT DIGIT.
+    
+    MOV CL,AL
+    MOV AL,BL
+    
+    MUL DL     ;MULTIPLY THE FIRST VALUE BY 10 (BY DEFAULT DL*AL)
+    
+    ADD AL,CL  ; PREVIOUS VALUE + NEW VALUE (10 + 0 = 10)
+    MOV BL,AL
+    MOV MYRES,BL
+    
+    JMP SCAN_NUM
+    
+  EXIT:
+    
+    ;PRINT NEW LINE
+    
+    MOV DL,10
+    MOV AH, 02H
+    INT 21H
+    
+    ;CLEAR AH TO USE FOR REMINDER
+    
+    MOV AH,00
+    MOV DL,0
+    MOV BL,0
+    
+    ;MOVING SUM TO AL
+    
+    MOV AL,MYRES
+    
+    MOV BL,10 ;TAKING 10 INTO BL, BL=10
+    
+    ; AL/BL
+    DIV BL
+    
+    ;MOVE REMINDER TO REM
+    MOV REM,AH
+    
+    ;PRINT AL
+    MOV DL,AL
+    ADD DL,48
+    MOV AH,02H
+    INT 21H
+    
+    ; TO PRINT THE REMINDER
+    MOV DL, REM
+    ADD DL,48
+    MOV AH,02H
+    INT 21H
+    
+    MOV AH,04CH
+    INT 21H
+    
+    MAIN ENDP
+END MAIN    

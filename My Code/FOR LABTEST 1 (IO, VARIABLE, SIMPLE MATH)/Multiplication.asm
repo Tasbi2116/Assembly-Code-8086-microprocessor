@@ -1,0 +1,54 @@
+.MODEL SMALL
+.STACK 100H
+.DATA
+    A DB ?
+    B DB ?
+    C DB 'INPUT FIRST DIGIT $'
+    D DB 10,13,'INPUT SECOND DIGIT $'
+    E DB 10,13,'RESULT $'
+
+.CODE
+MAIN PROC
+    MOV AX,@DATA
+    MOV DS,AX
+    
+    ;PRINT STRING C
+    MOV AH,9
+    LEA DX,C
+    INT 21H
+    
+    ;INPUT FIRST DIGIT
+    MOV AH,1
+    INT 21H
+    SUB AL,48
+    MOV A,AL
+    
+    ;PRINT STRING D
+    MOV AH,9
+    LEA DX,D
+    INT 21H
+    
+    ;INPUT SECOND DIGIT
+    MOV AH,1
+    INT 21H
+    SUB AL,48
+    MOV B,AL
+    
+    ;PRINT STRING RESULT
+    MOV AH,9
+    LEA DX,E
+    INT 21H
+    
+    MOV AL,A
+    MUL B ; A*B =AX
+    
+    MOV DL,AL
+    ADD DL,48
+    MOV AH,2
+    INT 21H
+    
+    EXIT:
+    MOV AH,4CH
+    INT 21H
+    MAIN ENDP
+END MAIN

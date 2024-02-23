@@ -1,0 +1,224 @@
+; LABTEST 2: 3RD SEPTEMBER, 2023 (CSE_21)
+; TAKE AN INPUT N. IF N IS 5/7, THEN OUTPUT A MESSAGE SAYING 
+; "IT'S A NUMBER THAT YOU WANT". IF N IS 1, THEN PRINT 1
+; IF N IS ANY SINGLE DIGIT NUMBER, THEN INPUT A TWO DIGIT NUMBER.
+; AND SHOW IT IN OUTPUT AFTER ADDING 5 WITH THE NUMBER.
+; 210216
+
+.MODEL SMALL
+.STACK 100H
+.DATA 
+    MSG1 DB "ENTER A NUMBER: $"
+    MSG2 DB "ENTER A TWO DIGIT NUMBER: $"
+    MSG_OUT1 DB "IT'S A NUMBER THAT YOU WANT $"
+    MSG_OUT2 DB "YOU PRESSED 1 $"
+    N DB ?
+    NO1 DB ?
+    NO2 DB ?
+    REM DB ?
+    DIGIT DB ?
+    
+.CODE
+MAIN PROC
+    ;INITIALIZING DATA
+    MOV AX,@DATA
+    MOV DS,AX
+    
+    ;INPUT A NUMBER
+    MOV AH,01H
+    INT 21H
+    
+    SUB AL,48
+    MOV N,AL
+    
+    ;COMPARE THE NUMBER WITH 5
+
+COMPARE5:
+    
+    MOV AH,00
+    MOV AL,00
+    MOV BL,00
+    MOV AL,N
+    MOV BL,5
+    
+    CMP AL,BL
+    JE  OUTPUT1
+    
+COMPARE7:
+    
+    MOV AH,00
+    MOV AL,00
+    MOV BL,00
+    MOV AL,N
+    MOV BL,7
+    
+    CMP AL,BL
+    JE  OUTPUT1
+
+COMPARE1:
+    
+    MOV AH,00
+    MOV AL,00
+    MOV BL,00
+    MOV DL,00
+    
+    MOV BL,1
+    MOV AL,N
+    CMP AL,BL
+    JE OUTPUT2
+    
+COMPARE_N:
+     
+    MOV AH,00
+    MOV AL,00
+    MOV BL,00
+    MOV DL,00
+             
+    MOV AL,N         
+    MOV BL,1
+    CMP AL,BL
+    JG  SCANNUM1
+    
+SCANNUM1:
+
+    MOV AH,00
+    MOV AL,00
+    MOV BL,00
+    MOV DL,00
+    
+    MOV AH,01H ;TAKING INPUT
+    INT 21H 
+    
+    CMP AL,13  ;CHECKING IF ENTER IS PRESSED
+    JE OUTPUT3
+    
+    SUB AL,48  ;CONVERTING TO DECIMAL
+    MOV AH,00
+    
+    MOV CL,AL
+    MOV AL,BL
+    MUL DL     ;MULTIPIED BY 10  
+    
+    ADD AL,CL
+    MOV BL,AL
+    MOV NO1,BL
+    
+    JMP SCANNUM1
+        
+OUTPUT1:
+
+    MOV AH,00
+    MOV AL,00
+    MOV DL,00
+    
+    ;NEW LINE
+    
+    MOV DL,10
+    MOV AH,02H
+    INT 21H
+    
+    MOV DL,13
+    MOV AH,02H
+    INT 21H
+    
+    ; OUTPUT MESSAGE
+    
+    MOV AH,9
+    LEA DX,MSG_OUT1
+    INT 21H
+    JMP EXIT
+    
+OUTPUT2:
+    
+    MOV AH,00
+    MOV AL,00
+    MOV BL,00
+    MOV DL,00
+    
+    ;NEW LINE
+    
+    MOV DL,10
+    MOV AH,02H
+    INT 21H
+    
+    MOV DL,13
+    MOV AH,02H
+    INT 21H
+    
+    ; OUTPUT MESSAGE
+    
+    MOV AH,9
+    LEA DX,MSG_OUT2
+    INT 21H
+    
+    ;NEW LINE
+    
+    MOV DL,10
+    MOV AH,02H
+    INT 21H
+    
+    MOV DL,13
+    MOV AH,02H
+    INT 21H
+    
+    ;OUTPUT 1
+    
+    MOV AH,00
+    MOV AH,02
+    MOV DL,N
+    ADD DL,48
+    INT 21H
+    
+    JMP EXIT
+    
+OUTPUT3:
+    ;NEW LINE   
+    MOV DL,10
+    MOV AH,02H
+    INT 21H
+    
+    MOV DL,13
+    MOV AH,02H
+    INT 21H
+    
+   
+    MOV AH,00
+    MOV AL,00
+    MOV BL,00
+    MOV DL,00
+    
+    MOV AL,NO1
+    MOV BL,5
+    
+    ADD AL,BL
+    
+    MOV NO1,AL
+    
+    MOV AL,NO1
+    
+    MOV BL,10
+    DIV BL
+    MOV REM,AH
+    MOV DIGIT,AL
+    
+    MOV DL,DIGIT
+    ADD DL,48
+    MOV AH,02
+    INT 21H
+    
+    MOV DL,00
+    MOV DL,REM
+    ADD DL,48
+    MOV AH,02
+    INT 21H
+    
+    JMP EXIT    
+    
+    
+EXIT:
+
+    MOV AX,4C00H
+    INT 21H
+    
+MAIN ENDP
+END MAIN
